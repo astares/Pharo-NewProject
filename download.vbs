@@ -1,7 +1,9 @@
 '****************************************************************************************
-' Defintions
+' Definitions
 '****************************************************************************************
-buildNummer = "60289"
+buildNummer = "60509"
+vmArchive = "stable-20170720.zip"
+sourceArchive = "PharoV60.sources.zip"
 useProxy    = False
 
 '****************************************************************************************
@@ -9,17 +11,17 @@ useProxy    = False
 '****************************************************************************************
 CheckFolderExists("download")
 
-Download "PharoVM-Spur32-win-latest.zip", "http://files.pharo.org/vm/pharo-spur32/win/", "./download"
+Download vmArchive, "http://files.pharo.org/vm/pharo-spur32/win/", "./download"
 Download (buildNummer & ".zip"), "http://files.pharo.org/image/60/", "./download"
-Download "PharoV50.sources.zip", "http://files.pharo.org/sources/", "./download"
+Download sourceArchive, "http://files.pharo.org/sources/", "./download"
 
 RecreateFolderExists("system")
-Extract "./download/PharoVM-Spur32-win-latest.zip" 
+Extract "./download/" & vmArchive 
 Extract "./download/" & (buildNummer & ".zip")
-Extract "./download/PharoV50.sources.zip" 
+Extract "./download/" & sourceArchive
 
 Set objShell = CreateObject("Wscript.Shell")
-objShell.Run GetScriptPath & "\system\Pharo.exe " & GetScriptPath & "\system\Pharo-" & buildNummer & ".image " & GetScriptPath & "\src\load.st"
+objShell.Run """" & GetScriptPath & "\system\Pharo.exe" & """" & " " & """" & GetScriptPath & "\system\Pharo-" & buildNummer & ".image" & """" & " " & """" & GetScriptPath & "\load.st" & """" 
 
 '****************************************************************************************
 ' Download a given file from the given base url into the given folder
@@ -90,7 +92,7 @@ Sub WGetDownload(url, folder)
 	   proxyOption = "--no-proxy"
 	End if 
 	Set objShell = CreateObject("Wscript.Shell")
-	cmd = GetScriptPath & "/bin/wget.exe " & proxyOption & " --directory-prefix=" & folder & " " & url  
+	cmd = """" & GetScriptPath & "/bin/wget.exe" & """" & " " & proxyOption & " --directory-prefix=" & folder & " " & url  
 	LogText cmd
 	objShell.Run cmd, 0 , True
 End sub
@@ -143,4 +145,3 @@ End Sub
 Sub LogText(value)
 	WScript.StdOut.Write value & vbCrLf 
 End Sub 
-
